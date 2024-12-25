@@ -158,9 +158,11 @@ contract TicTacToe {
 
         if (game.winner == X && game.playerX == msg.sender) {
             payable(msg.sender).transfer(game.betAmount * 2);
+            return;
         }
         else if (game.winner == O && game.playerO == msg.sender) {
             payable(msg.sender).transfer(game.betAmount * 2);
+            return;
         }
 
         require(false, "Cannot claim reward");
