@@ -56,11 +56,13 @@ contract TicTacToe {
         uint lastMoveAt = game.move % 10 ** 10;
         uint lastMoveIsX_O = game.move / 10 ** 20;
 
+        require(games[gameId].playerX != address(0) && games[gameId].playerO != address(0), "Game is not ready");
+        require(game.winner == 0, "Game is over");
+        require(lastMoveAt == 0 || lastMoveAt + MAX_TIME > block.timestamp, "Time is up");
+
         require(pos < SIZE * SIZE, "Invalid position 1");
         require(game.X & game.O & (1 << pos) == 0, "Invalied position 2");
 
-        require(game.winner == 0, "Game is over");
-        require(lastMoveAt == 0 || lastMoveAt + MAX_TIME > block.timestamp, "Time is up");
 
         if (lastMoveIsX_O == X) {
             require(game.playerO == msg.sender, "Wrong turn");
@@ -70,6 +72,7 @@ contract TicTacToe {
             if (winLine > 0 && checkWin(game.O, winLine, winPos)) {
                 game.winner = O;
             }
+            // 1329227995784915872903807060280344576n
         }
         else { // X goes first
             require(game.playerX == msg.sender, "Wrong turn");
@@ -159,6 +162,8 @@ contract TicTacToe {
         else if (game.winner == O && game.playerO == msg.sender) {
             payable(msg.sender).transfer(game.betAmount * 2);
         }
+
+        require(false, "Cannot claim reward");
     }
 
     // winline: ROW = 1, COLUMN = 2, LEFT-RIGHT: 3, RIGHT-LEFT: 4
@@ -201,26 +206,21 @@ contract TicTacToe {
         return mark & board == mark;
     }
 
-    function waitingList() public view returns(Game[] memory) {
-        Game[] memory result = new Game[](10);
-        uint count = 0;
-        for (uint i = 0; i < games.length; i++) {
-            if (count == 10) break;
-            if (games[i].playerO == address(0)) {
-                result[count] = games[i];
-                count++;
-            }
-        }
-        return result;
+    function allGames() public view returns(Game[] memory) {
+        return games;
     }
 
-    function myGame() public view returns(Game memory) {
-        for (uint i = 0; i < games.length; i++) {
-            if (games[i].playerX == msg.sender || games[i].playerO == msg.sender) {
-                return games[i];
+    function myGame(address add) public view returns(uint index, Game memory game) {
+        for (uint i = games.length - 1; i >= 0; i--) {
+            if (games[i].playerX == add || games[i].playerO == add) {
+                return (i, games[i]);
+            }
+
+            if (i == 0) {
+                break;
             }
         }
-        return Game({
+        return (0, Game({
             playerX: address(0),
             playerO: address(0),
             X: 0,
@@ -228,6 +228,6 @@ contract TicTacToe {
             betAmount: 0,
             winner: 0,
             move: 0
-        });
+        }));
     }
 }

@@ -1,5 +1,5 @@
 export const contractConfigs = {
-    address: '0x1319e3bE9C6DCB9Dca4E19392Fef522Dce28c393',
+    address: '0xCe7107616898C954b49404B20bF6CD889306319C',
     "abi": [
     {
       "inputs": [],
@@ -61,6 +61,56 @@ export const contractConfigs = {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "allGames",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "playerX",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "playerO",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "X",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "O",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "betAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "winner",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "move",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct TicTacToe.Game[]",
+          "name": "",
+          "type": "tuple[]"
         }
       ],
       "stateMutability": "view",
@@ -253,6 +303,67 @@ export const contractConfigs = {
       "name": "makeMove",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "add",
+          "type": "address"
+        }
+      ],
+      "name": "myGame",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "playerX",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "playerO",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "X",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "O",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "betAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "winner",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "move",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct TicTacToe.Game",
+          "name": "game",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
