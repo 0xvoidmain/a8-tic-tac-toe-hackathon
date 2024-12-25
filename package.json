@@ -1,0 +1,18 @@
+{
+  "name": "a8-tic-tac-toe-hackathon",
+  "version": "1.0.0",
+  "description": "npm init",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "hardhat compile",
+    "deploy": "npx hardhat ignition deploy ignition/modules/Deploy.ts",
+    "deploy-verify": "npx hardhat ignition deploy ignition/modules/Deploy.ts --verify"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.17"
+  }
+}
