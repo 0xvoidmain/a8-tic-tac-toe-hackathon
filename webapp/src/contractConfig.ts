@@ -1,5 +1,5 @@
 export const contractConfigs = {
-    address: '0x5003048337c7f447462c732d70F64f7c652086cB',
+    address: '0x3ED9Fb4ae0EFAEEb96B1ec9DaD256b6f48A51909',
     "abi": [
     {
       "inputs": [],
@@ -32,9 +32,9 @@ export const contractConfigs = {
       "name": "O",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "uint8",
           "name": "",
-          "type": "uint256"
+          "type": "uint8"
         }
       ],
       "stateMutability": "view",
@@ -58,9 +58,9 @@ export const contractConfigs = {
       "name": "X",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "uint8",
           "name": "",
-          "type": "uint256"
+          "type": "uint8"
         }
       ],
       "stateMutability": "view",
@@ -98,14 +98,24 @@ export const contractConfigs = {
               "type": "uint256"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint8",
               "name": "winner",
-              "type": "uint256"
+              "type": "uint8"
             },
             {
-              "internalType": "uint256",
-              "name": "move",
-              "type": "uint256"
+              "internalType": "uint8",
+              "name": "moveOf",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "movePos",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint64",
+              "name": "movedAt",
+              "type": "uint64"
             }
           ],
           "internalType": "struct TicTacToe.Game[]",
@@ -120,31 +130,18 @@ export const contractConfigs = {
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "gameId",
-          "type": "uint256"
-        }
-      ],
-      "name": "cancelGame",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
           "name": "board",
           "type": "uint256"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint8",
           "name": "winLine",
-          "type": "uint256"
+          "type": "uint8"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint8",
           "name": "start",
-          "type": "uint256"
+          "type": "uint8"
         }
       ],
       "name": "checkWin",
@@ -166,20 +163,7 @@ export const contractConfigs = {
           "type": "uint256"
         }
       ],
-      "name": "claimDraw",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "gameId",
-          "type": "uint256"
-        }
-      ],
-      "name": "claimWinner",
+      "name": "claimReward",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -251,14 +235,24 @@ export const contractConfigs = {
           "type": "uint256"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint8",
           "name": "winner",
-          "type": "uint256"
+          "type": "uint8"
         },
         {
-          "internalType": "uint256",
-          "name": "move",
-          "type": "uint256"
+          "internalType": "uint8",
+          "name": "moveOf",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint8",
+          "name": "movePos",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint64",
+          "name": "movedAt",
+          "type": "uint64"
         }
       ],
       "stateMutability": "view",
@@ -285,19 +279,19 @@ export const contractConfigs = {
           "type": "uint256"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint8",
           "name": "pos",
-          "type": "uint256"
+          "type": "uint8"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint8",
           "name": "winLine",
-          "type": "uint256"
+          "type": "uint8"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint8",
           "name": "winPos",
-          "type": "uint256"
+          "type": "uint8"
         }
       ],
       "name": "makeMove",
@@ -348,14 +342,24 @@ export const contractConfigs = {
               "type": "uint256"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint8",
               "name": "winner",
-              "type": "uint256"
+              "type": "uint8"
             },
             {
-              "internalType": "uint256",
-              "name": "move",
-              "type": "uint256"
+              "internalType": "uint8",
+              "name": "moveOf",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "movePos",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint64",
+              "name": "movedAt",
+              "type": "uint64"
             }
           ],
           "internalType": "struct TicTacToe.Game",
@@ -364,56 +368,6 @@ export const contractConfigs = {
         }
       ],
       "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "playerRequestDraw",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "gameId",
-          "type": "uint256"
-        }
-      ],
-      "name": "quitGame",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "gameId",
-          "type": "uint256"
-        }
-      ],
-      "name": "requestDraw",
-      "outputs": [],
-      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],

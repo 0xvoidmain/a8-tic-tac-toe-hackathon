@@ -8,22 +8,21 @@ contract TicTacToe {
         uint X;
         uint O;
         uint betAmount;
-        uint winner; //0: no winner/draw, 1: playerX, 2: playerO
-        uint move;  // store move of X/O and timestamp of last move. 
-                    // X = 1 * 10 ^ 20 + p * 10^10 + timestamp, 
-                    // O = 2 * 10 ^ 20 + p * 10^10 + timestamp
+        uint8 winner; //0: no winner/draw, 1: playerX, 2: playerO
+        uint8 moveOf; 
+        uint8 movePos;
+        uint64 movedAt;
     }
 
-    uint public constant X = 1;
-    uint public constant O = 2;
+    uint8 public constant X = 1;
+    uint8 public constant O = 2;
     uint public constant SIZE = 16;
-    uint public constant MAX_TIME = 60;
+    uint public constant MAX_TIME = 60; //seconds
     uint public constant DRAW_MARK = type(uint).max;
 
 
     Game[] public games;
     mapping(address => mapping(uint => bool)) public claimed;
-    mapping(address => mapping(uint => bool)) public playerRequestDraw;
 
     modifier onlyPlayer(uint gameId) {
         require(games[gameId].playerX == msg.sender || games[gameId].playerO == msg.sender, "You are not in this game");
@@ -38,7 +37,9 @@ contract TicTacToe {
             O: 0,
             betAmount: msg.value,
             winner: 0,
-            move: 0
+            moveOf: 0,
+            movePos: 0,
+            movedAt: 0
         }));
     }
 
@@ -48,109 +49,53 @@ contract TicTacToe {
         require(games[gameId].playerX != msg.sender, "You can't join your own game");
         require(games[gameId].betAmount == msg.value, "Bet amount is not correct");
         games[gameId].playerO = msg.sender;
-        games[gameId].move = block.timestamp;
+        games[gameId].movedAt = uint64(block.timestamp);
     }
 
-    function makeMove(uint gameId, uint pos, uint winLine, uint winPos) public onlyPlayer(gameId) {
+    function makeMove(uint gameId, uint8 pos, uint8 winLine, uint8 winPos) public onlyPlayer(gameId) {
         Game storage game = games[gameId];
-        uint lastMoveAt = game.move % 10 ** 10;
-        uint lastMoveIsX_O = game.move / 10 ** 20;
 
         require(games[gameId].playerX != address(0) && games[gameId].playerO != address(0), "Game is not ready");
         require(game.winner == 0, "Game is over");
-        require(lastMoveAt == 0 || lastMoveAt + MAX_TIME > block.timestamp, "Time is up");
+        require(game.movedAt == 0 || uint256(game.movedAt) + MAX_TIME > block.timestamp, "Time is up");
 
         require(pos < SIZE * SIZE, "Invalid position 1");
         require(game.X & game.O & (1 << pos) == 0, "Invalied position 2");
 
-
-        if (lastMoveIsX_O == X) {
+        game.movePos = pos;
+        game.movedAt = uint64(block.timestamp);
+        if (game.moveOf == X) {
             require(game.playerO == msg.sender, "Wrong turn");
-            game.move = 2 * 10 ** 20 + pos* 10 ** 10 + block.timestamp;
+            game.moveOf = O;
             game.O |= (1 << pos);
 
-            if (winLine > 0 && checkWin(game.O, winLine, winPos)) {
+            if (winLine > 0 && checkWin(game.O, uint(winLine), uint(winPos))) {
                 game.winner = O;
             }
-            // 1329227995784915872903807060280344576n
         }
         else { // X goes first
             require(game.playerX == msg.sender, "Wrong turn");
-            game.move = 1 * 10 ** 20 + pos* 10 ** 10 + block.timestamp;
+            game.moveOf = X;
             game.X |= (1 << pos);
 
-            if (winLine > 0 && checkWin(game.X, winLine, winPos)) {
+            if (winLine > 0 && checkWin(game.X, uint(winLine), uint(winPos))) {
                 game.winner = X;
             }
         }
     }
 
-    function requestDraw(uint gameId) public onlyPlayer(gameId) {
-        playerRequestDraw[msg.sender][gameId] = true;
-    }
-
-    function quitGame(uint gameId) public onlyPlayer(gameId) {
-        Game storage game = games[gameId];
-        require(game.winner == 0, "Game is over");
-        require(game.playerX != address(0x0) && game.playerO != address(0x0), "Game is not full");
-        if (game.playerX == msg.sender) {
-            game.winner = O;
-        }
-        else {
-            game.winner = X;
-        }
-    }
-
-    function cancelGame(uint gameId) public onlyPlayer(gameId) {
-        Game memory game = games[gameId];
-        require(game.playerX == address(0x0) || game.playerO == address(0x0), "Cannot cancel");
-        delete games[gameId];
-        payable(msg.sender).transfer(game.betAmount);
-    }
-
-    function claimDraw(uint gameId) public  onlyPlayer(gameId) {
-        require(claimed[msg.sender][gameId] == false, "You have already claimed this game");
-        claimed[msg.sender][gameId] = true;
-
-        Game memory game = games[gameId];
-
-        uint lastMoveAt = game.move % 10 ** 10;
-        uint lastMoveIsX_O = game.move / 10 ** 20;
-        
-        if (lastMoveIsX_O == 0 || lastMoveAt + MAX_TIME > block.timestamp) {
-            payable(msg.sender).transfer(game.betAmount);
-            return;
-        }
-
-        require(game.winner == 0, "No Draw");
-
-        if (game.X | game.O == DRAW_MARK) {
-            payable(msg.sender).transfer(game.betAmount);
-            return;
-        }
-
-        if (playerRequestDraw[game.playerX][gameId] && playerRequestDraw[game.playerO][gameId]) {
-            payable(msg.sender).transfer(game.betAmount);
-            return;
-        }
-
-        require(false, "No Draw");
-    }
-
-    function claimWinner(uint gameId) public onlyPlayer(gameId) {
+    function claimReward(uint gameId) public onlyPlayer(gameId) {
         require(claimed[msg.sender][gameId] == false, "You have already claimed this game");
         claimed[msg.sender][gameId] = true;
         
         Game memory game = games[gameId];
-        uint lastMoveAt = game.move % 10 ** 10;
-        uint lastMoveIsX_O = game.move / 10 ** 20;
 
         require(game.X | game.O != DRAW_MARK, "Game is draw");
 
-        if (game.winner == 0 && lastMoveIsX_O == X && lastMoveAt + MAX_TIME < block.timestamp) {
+        if (game.winner == 0 && game.moveOf == X && uint256(game.movedAt) + MAX_TIME < block.timestamp) {
             game.winner = O;
         }
-        else if (game.winner == 0 && lastMoveIsX_O == O && lastMoveAt + MAX_TIME < block.timestamp) {
+        else if (game.winner == 0 && game.moveOf == O && uint256(game.movedAt) + MAX_TIME < block.timestamp) {
             game.winner = X;
         }
 
@@ -229,7 +174,9 @@ contract TicTacToe {
             O: 0,
             betAmount: 0,
             winner: 0,
-            move: 0
+            moveOf: 0,
+            movePos: 0,
+            movedAt: 0
         }));
     }
 }

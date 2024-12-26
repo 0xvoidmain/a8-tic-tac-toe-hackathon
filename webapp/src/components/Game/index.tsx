@@ -29,8 +29,8 @@ export default () => {
   
   const gameId = myGame?.[0]
   const game = myGame?.[1]
-  const lastMoveAt = Number((myGame?.[1].move || BigInt(0)) % BigInt(10 ** 10))
-  const lastMoveIsX_O = Number((myGame?.[1].move || BigInt(0)) / BigInt(10 ** 20))
+  const lastMoveAt = Number(myGame?.[1].movedAt || BigInt(0))
+  const lastMoveIsX_O = Number((myGame?.[1].moveOf || BigInt(0)))
 
   const { 
     writeContract 
@@ -65,9 +65,9 @@ export default () => {
       functionName: 'makeMove',
       args: [
         BigInt(gameId || 0), 
-        BigInt(index), 
-        win ? BigInt(win.winLine) : BigInt(0), 
-        win ? BigInt(win.start) : BigInt(0)
+        index, 
+        win ? win.winLine : 0, 
+        win ? win.start : 0
       ]
     })
   }
@@ -75,7 +75,7 @@ export default () => {
   const claimReward = async () => {
     writeContract({
       ...contractConfigs,
-      functionName: 'claimWinner',
+      functionName: 'claimReward',
       args: [BigInt(gameId || 0)]
     })
   }
