@@ -3,7 +3,7 @@ import Wallet from './components/Wallet'
 import { contractConfigs } from './contractConfig'
 import { parseEther } from 'viem'
 import Game from './components/Game'
-import WaitingList from './components/WaitingList'
+import ListOfGames from './components/ListOfGames'
 
 function App() {
   const account = useAccount()
@@ -30,7 +30,7 @@ function App() {
         Game &nbsp; <button type="button" onClick={createGame}>Create A Game</button>
       </h2>
       <Game />
-      <WaitingList />
+      <ListOfGames />
     </div>
   </div>)
 }

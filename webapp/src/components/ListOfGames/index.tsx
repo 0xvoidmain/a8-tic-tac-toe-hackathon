@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useReadContract, useWriteContract } from "wagmi"
 import { contractConfigs } from "../../contractConfig"
-import { formatEther, parseEther, zeroAddress } from "viem"
+import { formatEther, zeroAddress } from "viem"
 
 export default () => {
     const { data: games, refetch: refetchGames } = useReadContract({
