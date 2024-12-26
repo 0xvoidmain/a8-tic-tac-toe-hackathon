@@ -1,5 +1,5 @@
 export const contractConfigs = {
-    address: '0x3ED9Fb4ae0EFAEEb96B1ec9DaD256b6f48A51909',
+    address: '0xe7A554Ed9cF0b2fB2fA30E1D6D7b6361bF8Ffe41',
     "abi": [
     {
       "inputs": [],
@@ -134,14 +134,14 @@ export const contractConfigs = {
           "type": "uint256"
         },
         {
-          "internalType": "uint8",
+          "internalType": "uint256",
           "name": "winLine",
-          "type": "uint8"
+          "type": "uint256"
         },
         {
-          "internalType": "uint8",
+          "internalType": "uint256",
           "name": "start",
-          "type": "uint8"
+          "type": "uint256"
         }
       ],
       "name": "checkWin",

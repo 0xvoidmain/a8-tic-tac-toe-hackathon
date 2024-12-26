@@ -40,7 +40,7 @@ export default () => {
   useEffect(() => {
       setInterval(() => {
         refetch()
-      }, 5000)
+      }, 2000)
   }, [])
 
   useEffect(() => {
